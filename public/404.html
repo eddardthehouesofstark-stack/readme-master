@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Profile Polish & README Architect</title>
+    <script>
+      // Single Page Apps for GitHub Pages redirect script
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      if (l.search[1] === '/' ) {
+        var decoded = l.search.slice(1).split('&').map(function(s) { 
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      } else {
+        // If loaded directly without trailing slash or on deep route
+        var repoName = l.pathname.split('/')[1] || '';
+        if (repoName && !l.pathname.endsWith('/')) {
+          window.location.replace(l.origin + '/' + repoName + '/' + l.search + l.hash);
+        }
+      }
+    </script>
+    <meta http-equiv="refresh" content="0;URL='./'">
+  </head>
+  <body class="bg-[#0d1117] text-[#e6edf3]">
+    <p>Redirecting...</p>
+  </body>
+</html>
