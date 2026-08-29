@@ -11,7 +11,11 @@ import {
   Search,
   RefreshCw,
   User,
-  Check
+  Check,
+  Rocket,
+  ExternalLink,
+  HelpCircle,
+  Copy
 } from 'lucide-react';
 import { ProfileData } from '../types';
 
@@ -38,6 +42,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [searchInput, setSearchInput] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showDeployModal, setShowDeployModal] = useState(false);
+  const [copiedWorkflow, setCopiedWorkflow] = useState(false);
 
   const tabs = [
     { id: 'audit', label: 'Profile Audit', icon: ShieldCheck, badge: criticalIssueCount > 0 ? `${criticalIssueCount} Alerts` : null, badgeColor: 'bg-red-500/20 text-red-400 border border-red-500/30' },
@@ -219,6 +225,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="font-semibold">{criticalIssueCount} Alerts</span>
               </div>
             )}
+
+            {/* Deploy Guide Button */}
+            <button
+              onClick={() => setShowDeployModal(true)}
+              className="px-3 py-1.5 rounded-lg bg-[#238636] hover:bg-[#2ea043] text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-all"
+            >
+              <Rocket className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Deployment Guide</span>
+              <span className="sm:hidden">Deploy</span>
+            </button>
           </div>
         </div>
 
@@ -250,6 +266,142 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </div>
       </div>
+
+      {/* Deployment Guide Modal */}
+      {showDeployModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#161b22] border border-[#30363d] rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+            {/* Modal Header */}
+            <div className="p-5 border-b border-[#30363d] flex items-center justify-between bg-[#0d1117]">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-[#238636]/20 border border-[#238636]/40 flex items-center justify-center text-[#3fb950]">
+                  <Rocket className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white flex items-center space-x-2">
+                    <span>How to Deploy Your Imported GitHub App</span>
+                  </h3>
+                  <p className="text-xs text-[#8b949e]">
+                    Step-by-step instructions to get your live website running for free on GitHub Pages, Vercel, or Netlify.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowDeployModal(false)}
+                className="w-8 h-8 rounded-lg bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-white flex items-center justify-center transition-colors text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs leading-relaxed text-[#c9d1d9]">
+              {/* Option 1: GitHub Pages with Auto Actions */}
+              <div className="p-4 bg-[#0d1117] rounded-xl border border-[#388bfd]/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="w-6 h-6 rounded-full bg-[#388bfd]/20 text-[#58a6ff] flex items-center justify-center font-bold text-xs">
+                      1
+                    </span>
+                    <h4 className="text-sm font-bold text-white">
+                      GitHub Pages (Free Automatic Deployment)
+                    </h4>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#238636]/20 text-[#3fb950] font-semibold border border-[#238636]/30">
+                    Workflow Included
+                  </span>
+                </div>
+                <p className="text-[#8b949e]">
+                  We have added <code className="text-[#58a6ff] bg-[#161b22] px-1.5 py-0.5 rounded">.github/workflows/deploy.yml</code> to your repository! To activate it on GitHub:
+                </p>
+                <ol className="space-y-2 list-decimal list-inside text-[#c9d1d9] pl-1">
+                  <li>
+                    Open your repository on GitHub and click <strong className="text-white">Settings</strong> (top tab).
+                  </li>
+                  <li>
+                    In the left sidebar, click <strong className="text-white">Pages</strong>.
+                  </li>
+                  <li>
+                    Under <strong className="text-white">Build and deployment &gt; Source</strong>, change the dropdown from <em>"Deploy from a branch"</em> to <strong className="text-[#3fb950]">"GitHub Actions"</strong>.
+                  </li>
+                  <li>
+                    Go to the <strong className="text-white">Actions</strong> tab in your repository — you will see the build workflow run automatically. Once green, your live URL will appear at <code className="text-[#58a6ff] bg-[#161b22] px-1 py-0.5 rounded">https://yourusername.github.io/your-repo/</code>!
+                  </li>
+                </ol>
+              </div>
+
+              {/* Option 2: 1-Click Free Hosting on Vercel / Netlify */}
+              <div className="p-4 bg-[#0d1117] rounded-xl border border-[#30363d] space-y-3">
+                <div className="flex items-center space-x-2">
+                  <span className="w-6 h-6 rounded-full bg-[#a371f7]/20 text-[#bc8cff] flex items-center justify-center font-bold text-xs">
+                    2
+                  </span>
+                  <h4 className="text-sm font-bold text-white">
+                    Deploy on Vercel or Netlify (Fastest & 1-Click)
+                  </h4>
+                </div>
+                <p className="text-[#8b949e]">
+                  If you want instant custom domains and automatic SSL:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d] space-y-1">
+                    <span className="font-bold text-white block">▲ Deploy with Vercel</span>
+                    <p className="text-[11px] text-[#8b949e]">
+                      1. Go to <span className="text-[#58a6ff]">vercel.com</span> &gt; Add New Project &gt; Import from GitHub.<br />
+                      2. Build Command: <code className="text-white">npm run build</code><br />
+                      3. Output Directory: <code className="text-white">dist</code>
+                    </p>
+                  </div>
+                  <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d] space-y-1">
+                    <span className="font-bold text-white block">💎 Deploy with Netlify</span>
+                    <p className="text-[11px] text-[#8b949e]">
+                      1. Go to <span className="text-[#58a6ff]">netlify.com</span> &gt; Import from Git.<br />
+                      2. Publish directory: <code className="text-white">dist</code><br />
+                      3. Click Deploy!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Option 3: If you wanted your GitHub Profile README to show */}
+              <div className="p-4 bg-[#0d1117] rounded-xl border border-[#30363d] space-y-2">
+                <div className="flex items-center space-x-2">
+                  <span className="w-6 h-6 rounded-full bg-[#f0883e]/20 text-[#f0883e] flex items-center justify-center font-bold text-xs">
+                    3
+                  </span>
+                  <h4 className="text-sm font-bold text-white">
+                    Are you trying to update your Personal Profile README (<code className="text-white font-mono">username/username</code>)?
+                  </h4>
+                </div>
+                <p className="text-[#8b949e]">
+                  If your goal is to show the generated stats and bio on your GitHub profile homepage (<code className="text-white">github.com/{currentUsername}</code>):
+                </p>
+                <ol className="space-y-1.5 list-decimal list-inside text-[#c9d1d9] pl-1">
+                  <li>
+                    Create a new repository named <strong>exactly</strong> your username: <code className="text-[#3fb950] bg-[#161b22] px-1.5 py-0.5 rounded font-mono">{currentUsername}</code>
+                  </li>
+                  <li>
+                    Make sure the repository is marked as <strong className="text-white">Public</strong> and check <em>"Add a README file"</em>.
+                  </li>
+                  <li>
+                    Go to the <strong className="text-[#58a6ff]">Profile README Architect</strong> tab in this app, click <strong className="text-white">Copy README.md</strong>, and paste it into that repository's <code className="text-white font-mono">README.md</code>.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-[#0d1117] border-t border-[#30363d] flex items-center justify-end">
+              <button
+                onClick={() => setShowDeployModal(false)}
+                className="px-5 py-2 bg-[#238636] hover:bg-[#2ea043] text-white text-xs font-bold rounded-lg transition-all"
+              >
+                Got It, Thanks!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
