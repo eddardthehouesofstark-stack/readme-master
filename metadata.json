@@ -1,0 +1,6 @@
+{
+  "name": "GitHub Profile Polish & README Architect",
+  "description": "Interactive GitHub profile optimizer, audit scorecard, custom README builder, repository hygiene cleaner, and AI profile review studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
